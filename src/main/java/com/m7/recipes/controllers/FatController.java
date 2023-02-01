@@ -14,7 +14,7 @@ public class FatController {
     }
 
     @GetMapping("info")
-    public CodeAddict info2() {
+    public CodeAddict info() {
         return new CodeAddict();
     }
 }
