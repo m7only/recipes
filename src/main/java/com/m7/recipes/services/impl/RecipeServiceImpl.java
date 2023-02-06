@@ -22,6 +22,9 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Recipe getRecipeById(Integer id) {
-        return RECIPE_STORAGE.getOrDefault(id, null);
+        if (!RECIPE_STORAGE.containsKey(id)) {
+            throw new IllegalArgumentException();
+        }
+        return RECIPE_STORAGE.get(id);
     }
 }
