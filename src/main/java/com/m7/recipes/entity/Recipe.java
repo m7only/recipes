@@ -1,12 +1,19 @@
 package com.m7.recipes.entity;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+
 public class Recipe {
+    @NotBlank
     String title;
+    @NotNull
     Integer cookTime;
+
     List<Ingredient> ingredients;
     Map<Integer, String> instruction;
 
