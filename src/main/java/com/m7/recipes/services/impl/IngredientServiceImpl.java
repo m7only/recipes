@@ -12,7 +12,7 @@ import java.util.Map;
 @Service
 @Validated
 public class IngredientServiceImpl implements IngredientService {
-    private static Integer counter = 0;
+    public static Integer counter = 0;
     private final Map<Integer, Ingredient> INGREDIENT_STORAGE = new HashMap<>();
 
     @Override
