@@ -14,6 +14,6 @@ public class Recipe {
     @NotNull
     private Integer cookTime;
 
-    List<Ingredient> ingredients;
-    Map<Integer, String> instruction;
+    private List<Ingredient> ingredients;
+    private Map<Integer, String> instruction;
 }
