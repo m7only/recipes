@@ -10,9 +10,9 @@ import java.util.Map;
 @Data
 public class Recipe {
     @NotBlank
-    String title;
+    private String title;
     @NotNull
-    Integer cookTime;
+    private Integer cookTime;
 
     List<Ingredient> ingredients;
     Map<Integer, String> instruction;

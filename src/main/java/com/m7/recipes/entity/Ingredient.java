@@ -7,10 +7,10 @@ import lombok.Data;
 @Data
 public class Ingredient {
     @NotBlank
-    String ingredientTitle;
+    private String ingredientTitle;
     @NotNull
-    Integer quantity;
+    private Integer quantity;
     @NotBlank
-    String measurementUnit;
+    private String measurementUnit;
 
 }

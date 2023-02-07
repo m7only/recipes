@@ -13,18 +13,18 @@ import java.util.Map;
 @Validated
 public class IngredientServiceImpl implements IngredientService {
     public static Integer counter = 0;
-    private final Map<Integer, Ingredient> INGREDIENT_STORAGE = new HashMap<>();
+    private final Map<Integer, Ingredient> ingredientStorage = new HashMap<>();
 
     @Override
     public Ingredient addIngredient(@Valid Ingredient ingredient) {
-        return INGREDIENT_STORAGE.put(counter++, ingredient);
+        return ingredientStorage.put(counter++, ingredient);
     }
 
     @Override
     public Ingredient getIngredientById(Integer id) {
-        if (!INGREDIENT_STORAGE.containsKey(id)) {
+        if (!ingredientStorage.containsKey(id)) {
             throw new IllegalArgumentException();
         }
-        return INGREDIENT_STORAGE.getOrDefault(id, null);
+        return ingredientStorage.get(id);
     }
 }
