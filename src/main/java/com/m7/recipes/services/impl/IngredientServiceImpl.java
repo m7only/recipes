@@ -1,0 +1,30 @@
+package com.m7.recipes.services.impl;
+
+import com.m7.recipes.entity.Ingredient;
+import com.m7.recipes.services.IngredientService;
+import jakarta.validation.Valid;
+import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@Service
+@Validated
+public class IngredientServiceImpl implements IngredientService {
+    public static Integer counter = 0;
+    private final Map<Integer, Ingredient> ingredientStorage = new HashMap<>();
+
+    @Override
+    public Ingredient addIngredient(@Valid Ingredient ingredient) {
+        return ingredientStorage.put(counter++, ingredient);
+    }
+
+    @Override
+    public Ingredient getIngredientById(Integer id) {
+        if (!ingredientStorage.containsKey(id)) {
+            throw new IllegalArgumentException();
+        }
+        return ingredientStorage.get(id);
+    }
+}
