@@ -4,10 +4,10 @@ package com.m7.recipes.controllers;
 import com.m7.recipes.entity.Ingredient;
 import com.m7.recipes.services.IngredientService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping({"ingredient", "ingredient/"})
@@ -19,16 +19,27 @@ public class IngredientController {
     }
 
     @PostMapping
-    public ResponseEntity<Ingredient> add(@RequestBody @Valid Ingredient ingredient) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(ingredientService.addIngredient(ingredient));
+    public ResponseEntity<Ingredient> addIngredient(@RequestBody @Valid Ingredient ingredient) {
+        return ResponseEntity.ok(ingredientService.addIngredient(ingredient));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Ingredient>> getAllIngredient() {
+        return ResponseEntity.ok(ingredientService.getAllIngredients());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Ingredient> getById(@PathVariable Integer id) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(ingredientService.getIngredientById(id));
+    public ResponseEntity<Ingredient> getByIdIngredient(@PathVariable Integer id) {
+        return ResponseEntity.ok(ingredientService.getIngredientById(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Ingredient> editIngredient(@PathVariable Integer id, @RequestBody @Valid Ingredient ingredient) {
+        return ResponseEntity.ok(ingredientService.editIngredient(id, ingredient));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Ingredient> deleteIngredient(@PathVariable Integer id) {
+        return ResponseEntity.ok(ingredientService.deleteIngredient(id));
     }
 }

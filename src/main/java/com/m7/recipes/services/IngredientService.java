@@ -1,10 +1,17 @@
 package com.m7.recipes.services;
 
 import com.m7.recipes.entity.Ingredient;
-import jakarta.validation.Valid;
+
+import java.util.List;
 
 public interface IngredientService {
-    Ingredient addIngredient(@Valid Ingredient ingredient);
+    Ingredient addIngredient(Ingredient ingredient);
 
     Ingredient getIngredientById(Integer id);
+
+    List<Ingredient> getAllIngredients();
+
+    Ingredient editIngredient(Integer id, Ingredient ingredient);
+
+    Ingredient deleteIngredient(Integer id);
 }
