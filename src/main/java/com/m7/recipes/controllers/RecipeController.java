@@ -19,7 +19,6 @@ import java.util.List;
 public class RecipeController {
     private final RecipeService recipeService;
 
-
     public RecipeController(RecipeService recipeService) {
         this.recipeService = recipeService;
     }
@@ -45,10 +44,9 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.getRecipesByIngredientId(ingredientId));
     }
 
-    @GetMapping(params = "ingredients")
-    public ResponseEntity<List<Recipe>> getRecipesByIngredients(@RequestBody List<Ingredient> ingredients) {
-        System.out.println("asd");
-        return ResponseEntity.ok(recipeService.getRecipesByIngredients(ingredients));
+    @GetMapping(params = "byingredients")
+    public ResponseEntity<List<Recipe>> getRecipesByIngredients(@RequestBody List<Ingredient> byIngredients) {
+        return ResponseEntity.ok(recipeService.getRecipesByIngredients(byIngredients));
     }
 
     @GetMapping("/{id}")
