@@ -2,6 +2,7 @@ package com.m7.recipes.services.impl;
 
 import com.m7.recipes.entity.Ingredient;
 import com.m7.recipes.services.IngredientService;
+import org.apache.commons.lang3.Validate;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -22,6 +23,7 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public Ingredient getIngredientById(Integer id) {
+        Validate.notNull(id);
         if (!ingredientStorage.containsKey(id)) {
             throw new IllegalArgumentException();
         }

@@ -1,10 +1,11 @@
 package com.m7.recipes.controllers;
 
-import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import javax.validation.ConstraintViolationException;
 
 @RestControllerAdvice
 public class ExceptionHandlerController {
@@ -20,6 +21,13 @@ public class ExceptionHandlerController {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<String> constraintViolationException(ConstraintViolationException exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(notValidParameters + ": " + exception.getMessage());
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<String> nullPointerException(NullPointerException exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(notValidParameters + ": " + exception.getMessage());

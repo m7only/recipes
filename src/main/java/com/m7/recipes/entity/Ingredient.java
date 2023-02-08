@@ -1,10 +1,11 @@
 package com.m7.recipes.entity;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-@Data
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+@Data // сделано ранее
 public class Ingredient {
     @NotBlank
     private String ingredientTitle;
