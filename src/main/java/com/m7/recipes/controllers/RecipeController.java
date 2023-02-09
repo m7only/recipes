@@ -68,22 +68,19 @@ public class RecipeController {
     @Operation(summary = "Получение рецепта по id")
     @GetMapping("/{id}")
     public ResponseEntity<Recipe> getRecipeById(@PathVariable Integer id) {
-        Recipe recipe = recipeService.getRecipeById(id);
-        return recipe != null ? ResponseEntity.ok(recipe) : ResponseEntity.notFound().build();
+        return ResponseEntity.of(recipeService.getRecipeById(id));
     }
 
     @Operation(summary = "Редактирование рецепта")
     @PutMapping("/{id}")
     public ResponseEntity<Recipe> editRecipe(@PathVariable Integer id,
                                              @RequestBody @Valid Recipe recipe) {
-        Recipe resultRecipe = recipeService.editRecipe(id, recipe);
-        return resultRecipe != null ? ResponseEntity.ok(recipe) : ResponseEntity.notFound().build();
+        return ResponseEntity.of(recipeService.editRecipe(id, recipe));
     }
 
     @Operation(summary = "Удаление рецепта по id")
     @DeleteMapping("/{id}")
     public ResponseEntity<Recipe> deleteRecipe(@PathVariable Integer id) {
-        Recipe recipe = recipeService.deleteRecipe(id);
-        return recipe != null ? ResponseEntity.ok(recipe) : ResponseEntity.notFound().build();
+        return ResponseEntity.of(recipeService.deleteRecipe(id));
     }
 }

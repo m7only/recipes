@@ -3,15 +3,16 @@ package com.m7.recipes.services;
 import com.m7.recipes.entity.Ingredient;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IngredientService {
     Ingredient addIngredient(Ingredient ingredient);
 
-    Ingredient getIngredientById(Integer id);
+    Optional<Ingredient> getIngredientById(Integer id);
 
     List<Ingredient> getAllIngredients();
 
-    Ingredient editIngredient(Integer id, Ingredient ingredient);
+    Optional<Ingredient> editIngredient(Integer id, Ingredient ingredient);
 
-    Ingredient deleteIngredient(Integer id);
+    Optional<Ingredient> deleteIngredient(Integer id);
 }

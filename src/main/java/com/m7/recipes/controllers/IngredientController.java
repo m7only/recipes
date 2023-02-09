@@ -44,21 +44,18 @@ public class IngredientController {
     @Operation(summary = "Получение ингредиента по id")
     @GetMapping("/{id}")
     public ResponseEntity<Ingredient> getByIdIngredient(@PathVariable Integer id) {
-        Ingredient ingredient = ingredientService.getIngredientById(id);
-        return ingredient != null ? ResponseEntity.ok(ingredient) : ResponseEntity.notFound().build();
+        return ResponseEntity.of(ingredientService.getIngredientById(id));
     }
 
     @Operation(summary = "Изменение ингредиента по id")
     @PutMapping("/{id}")
     public ResponseEntity<Ingredient> editIngredient(@PathVariable Integer id, @RequestBody @Valid Ingredient ingredient) {
-        Ingredient resultIngredient = ingredientService.editIngredient(id, ingredient);
-        return resultIngredient != null ? ResponseEntity.ok(resultIngredient) : ResponseEntity.notFound().build();
+        return ResponseEntity.of(ingredientService.editIngredient(id, ingredient));
     }
 
     @Operation(summary = "Удаление ингердиента по id")
     @DeleteMapping("/{id}")
     public ResponseEntity<Ingredient> deleteIngredient(@PathVariable Integer id) {
-        Ingredient ingredient = ingredientService.deleteIngredient(id);
-        return ingredient != null ? ResponseEntity.ok(ingredient) : ResponseEntity.notFound().build();
+        return ResponseEntity.of(ingredientService.deleteIngredient(id));
     }
 }
