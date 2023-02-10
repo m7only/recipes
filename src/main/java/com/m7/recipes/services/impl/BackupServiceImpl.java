@@ -19,10 +19,10 @@ public class BackupServiceImpl implements BackupService {
     }
 
     @Override
-    public <T> void saveBackup(T mapToSave, String fileName) {
+    public <T> void saveBackup(T objToSave, String fileName) {
         try {
             fIleService.save(
-                    new ObjectMapper().writeValueAsString(mapToSave),
+                    new ObjectMapper().writeValueAsString(objToSave),
                     fileName
             );
         } catch (JsonProcessingException e) {
