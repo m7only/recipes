@@ -6,10 +6,7 @@ import com.m7.recipes.services.RecipeService;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,27 +51,27 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Recipe getRecipeById(Integer id) {
+    public Optional<Recipe> getRecipeById(Integer id) {
         if (!recipeStorage.containsKey(id)) {
             throw new IllegalArgumentException();
         }
-        return recipeStorage.get(id);
+        return Optional.ofNullable(recipeStorage.get(id));
     }
 
     @Override
-    public Recipe editRecipe(Integer id, Recipe recipe) {
+    public Optional<Recipe> editRecipe(Integer id, Recipe recipe) {
         if (!recipeStorage.containsKey(id)) {
             throw new IllegalArgumentException();
         }
         recipeStorage.put(id, recipe);
-        return recipe;
+        return Optional.ofNullable(recipe);
     }
 
     @Override
-    public Recipe deleteRecipe(Integer id) {
+    public Optional<Recipe> deleteRecipe(Integer id) {
         if (!recipeStorage.containsKey(id)) {
             throw new IllegalArgumentException();
         }
-        return recipeStorage.remove(id);
+        return Optional.ofNullable(recipeStorage.remove(id));
     }
 }

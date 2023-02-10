@@ -25,6 +25,14 @@ public class ExceptionHandlerController {
                 .body(notValidParameters + ": " + exception.getMessage());
     }
 
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<String> nullPointerException(NullPointerException exception) {
+        exception.printStackTrace();
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(notValidParameters + ": " + exception.getMessage());
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> exception(Exception exception) {
         return ResponseEntity

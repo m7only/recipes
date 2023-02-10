@@ -2,12 +2,14 @@ package com.m7.recipes.services.impl;
 
 import com.m7.recipes.entity.Ingredient;
 import com.m7.recipes.services.IngredientService;
+import org.apache.commons.lang3.Validate;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Validated
@@ -21,11 +23,12 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public Ingredient getIngredientById(Integer id) {
+    public Optional<Ingredient> getIngredientById(Integer id) {
+        Validate.notNull(id);
         if (!ingredientStorage.containsKey(id)) {
             throw new IllegalArgumentException();
         }
-        return ingredientStorage.get(id);
+        return Optional.ofNullable(ingredientStorage.get(id));
     }
 
     @Override
@@ -34,19 +37,19 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public Ingredient editIngredient(Integer id, Ingredient ingredient) {
+    public Optional<Ingredient> editIngredient(Integer id, Ingredient ingredient) {
         if (!ingredientStorage.containsKey(id)) {
             throw new IllegalArgumentException();
         }
         ingredientStorage.put(id, ingredient);
-        return ingredient;
+        return Optional.ofNullable(ingredient);
     }
 
     @Override
-    public Ingredient deleteIngredient(Integer id) {
+    public Optional<Ingredient> deleteIngredient(Integer id) {
         if (!ingredientStorage.containsKey(id)) {
             throw new IllegalArgumentException();
         }
-        return ingredientStorage.remove(id);
+        return Optional.ofNullable(ingredientStorage.remove(id));
     }
 }
