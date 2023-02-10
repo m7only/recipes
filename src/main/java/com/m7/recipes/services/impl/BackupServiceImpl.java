@@ -31,7 +31,7 @@ public class BackupServiceImpl implements BackupService {
     }
 
     @Override
-    public <T> Optional<T> loadBackup(T map, String fileName) {
+    public <T> Optional<T> loadBackup(T type, String fileName) {
         try {
             return Optional.ofNullable(
                     new ObjectMapper().readValue(
