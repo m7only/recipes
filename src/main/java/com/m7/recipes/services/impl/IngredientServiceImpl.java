@@ -1,8 +1,6 @@
 package com.m7.recipes.services.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.m7.recipes.entity.Ingredient;
-import com.m7.recipes.entity.Recipe;
 import com.m7.recipes.services.BackupService;
 import com.m7.recipes.services.IngredientService;
 import jakarta.annotation.PostConstruct;
@@ -15,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Validated
@@ -32,24 +29,13 @@ public class IngredientServiceImpl implements IngredientService {
 
     @PostConstruct
     private void backupLoad() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        ingredientStorage = backupService.LoadMap(fileName)
-                .orElse(new HashMap<Integer, Recipe>())
-                .entrySet()
-                .stream()
-                .collect(Collectors.toMap(
-                        entry -> objectMapper.convertValue(entry.getKey(), Integer.class),
-                        entry -> objectMapper.convertValue(entry.getValue(), Ingredient.class)
-                ));
-
-        counter = ingredientStorage.keySet().stream()
-                .max(Integer::compareTo)
-                .orElse(0);
+        ingredientStorage = backupService.loadBackup(ingredientStorage, fileName).orElse(new HashMap<>());
     }
+
     @Override
     public Ingredient addIngredient(Ingredient ingredient) {
         ingredientStorage.put(counter++, ingredient);
-        backupService.SaveMap(ingredientStorage, fileName);
+        backupService.saveBackup(ingredientStorage, fileName);
         return ingredient;
     }
 
@@ -73,7 +59,7 @@ public class IngredientServiceImpl implements IngredientService {
             throw new IllegalArgumentException();
         }
         ingredientStorage.put(id, ingredient);
-        backupService.SaveMap(ingredientStorage, fileName);
+        backupService.saveBackup(ingredientStorage, fileName);
         return Optional.ofNullable(ingredient);
     }
 
@@ -83,7 +69,7 @@ public class IngredientServiceImpl implements IngredientService {
             throw new IllegalArgumentException();
         }
         Ingredient ingredient = ingredientStorage.remove(id);
-        backupService.SaveMap(ingredientStorage, fileName);
+        backupService.saveBackup(ingredientStorage, fileName);
         return Optional.ofNullable(ingredient);
     }
 }

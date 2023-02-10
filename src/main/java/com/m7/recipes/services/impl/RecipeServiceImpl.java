@@ -1,6 +1,5 @@
 package com.m7.recipes.services.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.m7.recipes.entity.Ingredient;
 import com.m7.recipes.entity.Recipe;
 import com.m7.recipes.services.BackupService;
@@ -29,24 +28,13 @@ public class RecipeServiceImpl implements RecipeService {
 
     @PostConstruct
     private void backupLoad() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        recipeStorage = backupService.LoadMap(fileName)
-                .orElse(new HashMap<Integer, Recipe>())
-                .entrySet()
-                .stream()
-                .collect(Collectors.toMap(
-                        entry -> objectMapper.convertValue(entry.getKey(), Integer.class),
-                        entry -> objectMapper.convertValue(entry.getValue(), Recipe.class)
-                ));
-
-        counter = recipeStorage.keySet().stream()
-                .max(Integer::compareTo)
-                .orElse(0);
+        recipeStorage = backupService.loadBackup(recipeStorage, fileName).orElse(new HashMap<>());
     }
+
     @Override
     public Recipe addRecipe(Recipe recipe) {
         recipeStorage.put(counter++, recipe);
-        backupService.SaveMap(recipeStorage, fileName);
+        backupService.saveBackup(recipeStorage, fileName);
         return recipe;
     }
 
@@ -94,7 +82,7 @@ public class RecipeServiceImpl implements RecipeService {
             throw new IllegalArgumentException();
         }
         recipeStorage.put(id, recipe);
-        backupService.SaveMap(recipeStorage, fileName);
+        backupService.saveBackup(recipeStorage, fileName);
         return Optional.ofNullable(recipe);
     }
 
@@ -104,7 +92,7 @@ public class RecipeServiceImpl implements RecipeService {
             throw new IllegalArgumentException();
         }
         Recipe recipe = recipeStorage.remove(id);
-        backupService.SaveMap(recipeStorage, fileName);
+        backupService.saveBackup(recipeStorage, fileName);
         return Optional.ofNullable(recipe);
     }
 }

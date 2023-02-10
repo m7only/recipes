@@ -7,7 +7,6 @@ import com.m7.recipes.services.BackupService;
 import com.m7.recipes.services.FileService;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -20,7 +19,7 @@ public class BackupServiceImpl implements BackupService {
     }
 
     @Override
-    public void SaveMap(Map<?, ?> mapToSave, String fileName) {
+    public <T> void saveBackup(T mapToSave, String fileName) {
         try {
             fIleService.save(
                     new ObjectMapper().writeValueAsString(mapToSave),
@@ -32,7 +31,7 @@ public class BackupServiceImpl implements BackupService {
     }
 
     @Override
-    public Optional<Map<?, ?>> LoadMap(String fileName) {
+    public <T> Optional<T> loadBackup(T map, String fileName) {
         try {
             return Optional.ofNullable(
                     new ObjectMapper().readValue(
