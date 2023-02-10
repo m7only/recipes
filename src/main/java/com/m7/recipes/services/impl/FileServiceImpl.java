@@ -1,6 +1,6 @@
 package com.m7.recipes.services.impl;
 
-import com.m7.recipes.services.FIleService;
+import com.m7.recipes.services.FileService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,7 @@ import java.nio.file.Path;
 import java.util.Optional;
 
 @Service
-public class FIleServiceImpl implements FIleService {
+public class FileServiceImpl implements FileService {
     @Value("${path.to.backup.folder}")
     String backupFolder;
 

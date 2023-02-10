@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.m7.recipes.services.BackupService;
-import com.m7.recipes.services.FIleService;
+import com.m7.recipes.services.FileService;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -13,9 +13,9 @@ import java.util.Optional;
 @Service
 public class BackupServiceImpl implements BackupService {
 
-    FIleService fIleService;
+    FileService fIleService;
 
-    public BackupServiceImpl(FIleService fIleService) {
+    public BackupServiceImpl(FileService fIleService) {
         this.fIleService = fIleService;
     }
 
