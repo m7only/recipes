@@ -1,8 +1,11 @@
 package com.m7.recipes.services.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.m7.recipes.entity.Ingredient;
+import com.m7.recipes.entity.Recipe;
 import com.m7.recipes.services.BackupService;
 import com.m7.recipes.services.IngredientService;
+import jakarta.annotation.PostConstruct;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,12 +15,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Validated
 public class IngredientServiceImpl implements IngredientService {
     private static Integer counter = 0;
-    private final Map<Integer, Ingredient> ingredientStorage = new HashMap<>();
+    private Map<Integer, Ingredient> ingredientStorage = new HashMap<>();
     @Value("${ingredient.backup.file.name}")
     private String fileName;
     private final BackupService backupService;
@@ -26,6 +30,22 @@ public class IngredientServiceImpl implements IngredientService {
         this.backupService = backupService;
     }
 
+    @PostConstruct
+    private void backupLoad() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ingredientStorage = backupService.LoadMap(fileName)
+                .orElse(new HashMap<Integer, Recipe>())
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        entry -> objectMapper.convertValue(entry.getKey(), Integer.class),
+                        entry -> objectMapper.convertValue(entry.getValue(), Ingredient.class)
+                ));
+
+        counter = ingredientStorage.keySet().stream()
+                .max(Integer::compareTo)
+                .orElse(0);
+    }
     @Override
     public Ingredient addIngredient(Ingredient ingredient) {
         ingredientStorage.put(counter++, ingredient);

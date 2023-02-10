@@ -36,7 +36,7 @@ public class BackupServiceImpl implements BackupService {
         try {
             return Optional.ofNullable(
                     new ObjectMapper().readValue(
-                            fIleService.read(fileName).orElseThrow(),
+                            fIleService.read(fileName).orElse(""),
                             new TypeReference<>() {
                             }
                     )

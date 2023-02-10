@@ -27,13 +27,6 @@ public class RecipeServiceImpl implements RecipeService {
         this.backupService = backupService;
     }
 
-    @Override
-    public Recipe addRecipe(Recipe recipe) {
-        recipeStorage.put(counter++, recipe);
-        backupService.SaveMap(recipeStorage, fileName);
-        return recipe;
-    }
-
     @PostConstruct
     private void backupLoad() {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -49,6 +42,12 @@ public class RecipeServiceImpl implements RecipeService {
         counter = recipeStorage.keySet().stream()
                 .max(Integer::compareTo)
                 .orElse(0);
+    }
+    @Override
+    public Recipe addRecipe(Recipe recipe) {
+        recipeStorage.put(counter++, recipe);
+        backupService.SaveMap(recipeStorage, fileName);
+        return recipe;
     }
 
     @Override
