@@ -14,7 +14,7 @@ import java.util.Optional;
 @Service
 @Validated
 public class IngredientServiceImpl implements IngredientService {
-    public static Integer counter = 0;
+    private static Integer counter = 0;
     private final Map<Integer, Ingredient> ingredientStorage = new HashMap<>();
 
     @Override

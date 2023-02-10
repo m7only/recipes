@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @Service
 @Validated
 public class RecipeServiceImpl implements RecipeService {
-    public static Integer counter = 0;
+    private static Integer counter = 0;
     private final Map<Integer, Recipe> recipeStorage = new HashMap<>();
 
     @Override
