@@ -29,7 +29,7 @@ public class IngredientServiceImpl implements IngredientService {
 
     @PostConstruct
     private void backupLoad() {
-        ingredientStorage = backupService.loadBackup(ingredientStorage, fileName).orElse(new HashMap<>());
+        ingredientStorage = backupService.loadBackup(ingredientStorage, fileName).orElse(ingredientStorage);
     }
 
     @Override

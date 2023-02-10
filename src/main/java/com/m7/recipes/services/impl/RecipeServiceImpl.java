@@ -28,7 +28,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @PostConstruct
     private void backupLoad() {
-        recipeStorage = backupService.loadBackup(recipeStorage, fileName).orElse(new HashMap<>());
+        recipeStorage = backupService.loadBackup(recipeStorage, fileName).orElse(recipeStorage);
     }
 
     @Override
