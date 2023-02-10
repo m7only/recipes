@@ -16,11 +16,10 @@ import java.util.stream.Collectors;
 @Validated
 public class RecipeServiceImpl implements RecipeService {
     private static Integer counter = 0;
+    private final BackupService backupService;
     private Map<Integer, Recipe> recipeStorage = new HashMap<>();
-
     @Value("${recipe.backup.file.name}")
     private String fileName;
-    private final BackupService backupService;
 
     public RecipeServiceImpl(BackupService backupService) {
         this.backupService = backupService;
@@ -29,7 +28,6 @@ public class RecipeServiceImpl implements RecipeService {
     @PostConstruct
     private void backupLoad() {
         recipeStorage = backupService.loadBackup(recipeStorage, fileName).orElse(recipeStorage);
-
     }
 
     @Override

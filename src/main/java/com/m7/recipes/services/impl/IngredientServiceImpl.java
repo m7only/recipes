@@ -18,10 +18,10 @@ import java.util.Optional;
 @Validated
 public class IngredientServiceImpl implements IngredientService {
     private static Integer counter = 0;
+    private final BackupService backupService;
     private Map<Integer, Ingredient> ingredientStorage = new HashMap<>();
     @Value("${ingredient.backup.file.name}")
     private String fileName;
-    private final BackupService backupService;
 
     public IngredientServiceImpl(BackupService backupService) {
         this.backupService = backupService;
