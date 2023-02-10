@@ -1,8 +1,10 @@
 package com.m7.recipes.services.impl;
 
 import com.m7.recipes.entity.Ingredient;
+import com.m7.recipes.services.BackupService;
 import com.m7.recipes.services.IngredientService;
 import org.apache.commons.lang3.Validate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -16,10 +18,19 @@ import java.util.Optional;
 public class IngredientServiceImpl implements IngredientService {
     private static Integer counter = 0;
     private final Map<Integer, Ingredient> ingredientStorage = new HashMap<>();
+    @Value("${ingredient.backup.file.name}")
+    private String fileName;
+    private final BackupService backupService;
+
+    public IngredientServiceImpl(BackupService backupService) {
+        this.backupService = backupService;
+    }
 
     @Override
     public Ingredient addIngredient(Ingredient ingredient) {
-        return ingredientStorage.put(counter++, ingredient);
+        ingredientStorage.put(counter++, ingredient);
+        backupService.SaveMap(ingredientStorage, fileName);
+        return ingredient;
     }
 
     @Override
@@ -42,6 +53,7 @@ public class IngredientServiceImpl implements IngredientService {
             throw new IllegalArgumentException();
         }
         ingredientStorage.put(id, ingredient);
+        backupService.SaveMap(ingredientStorage, fileName);
         return Optional.ofNullable(ingredient);
     }
 
@@ -50,6 +62,8 @@ public class IngredientServiceImpl implements IngredientService {
         if (!ingredientStorage.containsKey(id)) {
             throw new IllegalArgumentException();
         }
-        return Optional.ofNullable(ingredientStorage.remove(id));
+        Ingredient ingredient = ingredientStorage.remove(id);
+        backupService.SaveMap(ingredientStorage, fileName);
+        return Optional.ofNullable(ingredient);
     }
 }

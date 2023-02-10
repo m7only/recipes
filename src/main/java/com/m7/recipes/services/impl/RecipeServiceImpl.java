@@ -1,8 +1,12 @@
 package com.m7.recipes.services.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.m7.recipes.entity.Ingredient;
 import com.m7.recipes.entity.Recipe;
+import com.m7.recipes.services.BackupService;
 import com.m7.recipes.services.RecipeService;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -13,11 +17,38 @@ import java.util.stream.Collectors;
 @Validated
 public class RecipeServiceImpl implements RecipeService {
     private static Integer counter = 0;
-    private final Map<Integer, Recipe> recipeStorage = new HashMap<>();
+    private Map<Integer, Recipe> recipeStorage = new HashMap<>();
+
+    @Value("${recipe.backup.file.name}")
+    private String fileName;
+    private final BackupService backupService;
+
+    public RecipeServiceImpl(BackupService backupService) {
+        this.backupService = backupService;
+    }
 
     @Override
     public Recipe addRecipe(Recipe recipe) {
-        return recipeStorage.put(counter++, recipe);
+        recipeStorage.put(counter++, recipe);
+        backupService.SaveMap(recipeStorage, fileName);
+        return recipe;
+    }
+
+    @PostConstruct
+    private void backupLoad() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        recipeStorage = backupService.LoadMap(fileName)
+                .orElse(new HashMap<Integer, Recipe>())
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        entry -> objectMapper.convertValue(entry.getKey(), Integer.class),
+                        entry -> objectMapper.convertValue(entry.getValue(), Recipe.class)
+                ));
+
+        counter = recipeStorage.keySet().stream()
+                .max(Integer::compareTo)
+                .orElse(0);
     }
 
     @Override
@@ -64,6 +95,7 @@ public class RecipeServiceImpl implements RecipeService {
             throw new IllegalArgumentException();
         }
         recipeStorage.put(id, recipe);
+        backupService.SaveMap(recipeStorage, fileName);
         return Optional.ofNullable(recipe);
     }
 
@@ -72,6 +104,8 @@ public class RecipeServiceImpl implements RecipeService {
         if (!recipeStorage.containsKey(id)) {
             throw new IllegalArgumentException();
         }
-        return Optional.ofNullable(recipeStorage.remove(id));
+        Recipe recipe = recipeStorage.remove(id);
+        backupService.SaveMap(recipeStorage, fileName);
+        return Optional.ofNullable(recipe);
     }
 }
