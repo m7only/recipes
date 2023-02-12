@@ -12,7 +12,7 @@ import java.util.Optional;
 @Service
 public class FileServiceImpl implements FileService {
     @Value("${path.to.backup.folder}")
-    String backupFolder;
+    private String backupFolder;
 
     @Override
     public void save(String data, String fileName) {
