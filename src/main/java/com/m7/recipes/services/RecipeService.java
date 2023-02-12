@@ -2,9 +2,7 @@ package com.m7.recipes.services;
 
 import com.m7.recipes.entity.Ingredient;
 import com.m7.recipes.entity.Recipe;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,8 +22,4 @@ public interface RecipeService {
     List<Recipe> getRecipesByIngredientId(Integer ingredientId);
 
     List<Recipe> getRecipesByIngredients(List<Ingredient> ingredients);
-
-    Path saveRecipesBackup();
-
-    void uploadRecipesBackup(MultipartFile file);
 }

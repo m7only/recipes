@@ -12,4 +12,5 @@ public class Ingredient {
     private Integer quantity;
     @NotBlank
     private String measurementUnit;
+
 }
