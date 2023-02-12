@@ -8,11 +8,10 @@ import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.nio.file.Path;
+import java.util.*;
 
 @Service
 @Validated
@@ -29,14 +28,23 @@ public class IngredientServiceImpl implements IngredientService {
 
     @PostConstruct
     private void backupLoad() {
-        ingredientStorage = backupService.loadBackup(ingredientStorage, fileName).orElse(ingredientStorage);
+        ingredientStorage = backupService
+                .loadBackup(Integer.class, Ingredient.class, fileName)
+                .orElse(ingredientStorage);
     }
 
     @Override
     public Ingredient addIngredient(Ingredient ingredient) {
         ingredientStorage.put(counter++, ingredient);
-        backupService.saveBackup(ingredientStorage, fileName);
+        saveIngredientsBackup();
         return ingredient;
+    }
+
+    @Override
+    public void addIngredient(List<Ingredient> ingredients) {
+        List<Ingredient> list = new ArrayList<>(List.copyOf(ingredients));
+        list.removeAll(ingredientStorage.values());
+        list.forEach(this::addIngredient);
     }
 
     @Override
@@ -59,7 +67,7 @@ public class IngredientServiceImpl implements IngredientService {
             throw new IllegalArgumentException();
         }
         ingredientStorage.put(id, ingredient);
-        backupService.saveBackup(ingredientStorage, fileName);
+        saveIngredientsBackup();
         return Optional.ofNullable(ingredient);
     }
 
@@ -69,7 +77,17 @@ public class IngredientServiceImpl implements IngredientService {
             throw new IllegalArgumentException();
         }
         Ingredient ingredient = ingredientStorage.remove(id);
-        backupService.saveBackup(ingredientStorage, fileName);
+        saveIngredientsBackup();
         return Optional.ofNullable(ingredient);
+    }
+
+    @Override
+    public Path saveIngredientsBackup() {
+        return backupService.saveBackup(ingredientStorage, fileName);
+    }
+
+    @Override
+    public void uploadIngredientsBackup(MultipartFile file) {
+        ingredientStorage = backupService.uploadBackup(Integer.class, Ingredient.class, file, fileName).orElse(ingredientStorage);
     }
 }
