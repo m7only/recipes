@@ -2,7 +2,10 @@ package com.m7.recipes.services.impl;
 
 import com.m7.recipes.entity.Ingredient;
 import com.m7.recipes.entity.Recipe;
+import com.m7.recipes.services.BackupService;
 import com.m7.recipes.services.RecipeService;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -13,11 +16,25 @@ import java.util.stream.Collectors;
 @Validated
 public class RecipeServiceImpl implements RecipeService {
     private static Integer counter = 0;
-    private final Map<Integer, Recipe> recipeStorage = new HashMap<>();
+    private final BackupService backupService;
+    private Map<Integer, Recipe> recipeStorage = new HashMap<>();
+    @Value("${recipe.backup.file.name}")
+    private String fileName;
+
+    public RecipeServiceImpl(BackupService backupService) {
+        this.backupService = backupService;
+    }
+
+    @PostConstruct
+    private void backupLoad() {
+        recipeStorage = backupService.loadBackup(recipeStorage, fileName).orElse(recipeStorage);
+    }
 
     @Override
     public Recipe addRecipe(Recipe recipe) {
-        return recipeStorage.put(counter++, recipe);
+        recipeStorage.put(counter++, recipe);
+        backupService.saveBackup(recipeStorage, fileName);
+        return recipe;
     }
 
     @Override
@@ -64,6 +81,7 @@ public class RecipeServiceImpl implements RecipeService {
             throw new IllegalArgumentException();
         }
         recipeStorage.put(id, recipe);
+        backupService.saveBackup(recipeStorage, fileName);
         return Optional.ofNullable(recipe);
     }
 
@@ -72,6 +90,8 @@ public class RecipeServiceImpl implements RecipeService {
         if (!recipeStorage.containsKey(id)) {
             throw new IllegalArgumentException();
         }
-        return Optional.ofNullable(recipeStorage.remove(id));
+        Recipe recipe = recipeStorage.remove(id);
+        backupService.saveBackup(recipeStorage, fileName);
+        return Optional.ofNullable(recipe);
     }
 }
