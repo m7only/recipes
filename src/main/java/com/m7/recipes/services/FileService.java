@@ -1,12 +1,17 @@
 package com.m7.recipes.services;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Path;
 import java.util.Optional;
 
 public interface FileService {
 
-    void save(String data, String fileName);
+    Path save(String data, Path path);
 
-    Optional<String> read(String fileName);
+    Optional<String> read(Path path);
 
-    void clean(String fileName);
+    void clean(Path path);
+
+    boolean download(MultipartFile file, Path path);
 }
