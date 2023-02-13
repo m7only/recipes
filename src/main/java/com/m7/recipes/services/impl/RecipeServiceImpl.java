@@ -112,7 +112,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public void uploadRecipesBackup(MultipartFile file) {
-        recipeStorage = backupService.uploadBackup(Integer.class, Recipe.class, file, fileName).orElse(recipeStorage);
+        recipeStorage = backupService.uploadBackupFile(Integer.class, Recipe.class, file, fileName).orElse(recipeStorage);
         recipeStorage.values().stream()
                 .toList()
                 .forEach(recipe -> ingredientService.addIngredient(recipe.getIngredients()));

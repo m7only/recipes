@@ -13,5 +13,5 @@ public interface FileService {
 
     void clean(Path path);
 
-    boolean download(MultipartFile file, Path path);
+    boolean upload(MultipartFile file, Path path);
 }

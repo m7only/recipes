@@ -45,7 +45,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public boolean download(MultipartFile file, Path path) {
+    public boolean upload(MultipartFile file, Path path) {
         try {
             Files.deleteIfExists(path);
         } catch (IOException e) {

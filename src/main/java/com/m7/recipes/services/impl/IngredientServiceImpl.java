@@ -88,6 +88,6 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public void uploadIngredientsBackup(MultipartFile file) {
-        ingredientStorage = backupService.uploadBackup(Integer.class, Ingredient.class, file, fileName).orElse(ingredientStorage);
+        ingredientStorage = backupService.uploadBackupFile(Integer.class, Ingredient.class, file, fileName).orElse(ingredientStorage);
     }
 }

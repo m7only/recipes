@@ -59,11 +59,11 @@ public class BackupServiceImpl implements BackupService {
     }
 
     @Override
-    public <K, V> Optional<Map<K, V>> uploadBackup(Class<K> kClass,
-                                                   Class<V> vClass,
-                                                   MultipartFile file,
-                                                   String fileName) {
+    public <K, V> Optional<Map<K, V>> uploadBackupFile(Class<K> kClass,
+                                                       Class<V> vClass,
+                                                       MultipartFile file,
+                                                       String fileName) {
         Path path = Path.of(backupFolder, fileName);
-        return fIleService.download(file, path) ? loadBackup(kClass, vClass, fileName) : Optional.empty();
+        return fIleService.upload(file, path) ? loadBackup(kClass, vClass, fileName) : Optional.empty();
     }
 }

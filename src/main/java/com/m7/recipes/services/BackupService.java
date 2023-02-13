@@ -13,8 +13,8 @@ public interface BackupService {
                                           Class<V> vClass,
                                           String fileName);
 
-    <K, V> Optional<Map<K, V>> uploadBackup(Class<K> kClass,
-                                            Class<V> vClass,
-                                            MultipartFile file,
-                                            String fileName);
+    <K, V> Optional<Map<K, V>> uploadBackupFile(Class<K> kClass,
+                                                Class<V> vClass,
+                                                MultipartFile file,
+                                                String fileName);
 }
