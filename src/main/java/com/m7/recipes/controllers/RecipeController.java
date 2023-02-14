@@ -11,10 +11,16 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 @RestController
@@ -82,5 +88,18 @@ public class RecipeController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Recipe> deleteRecipe(@PathVariable Integer id) {
         return ResponseEntity.of(recipeService.deleteRecipe(id));
+    }
+
+    @Operation(summary = "Экспорт всех рецептов в виде текста")
+    @GetMapping("/export")
+    public ResponseEntity<InputStreamResource> exportRecipesAsTXT() throws IOException {
+        Path path = recipeService.exportAsTXT();
+        return path != null
+                ? ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .contentLength(Files.size(path))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + path.getFileName().toString())
+                .body(new InputStreamResource(Files.newInputStream(path)))
+                : ResponseEntity.notFound().build();
     }
 }

@@ -28,4 +28,6 @@ public interface RecipeService {
     Path saveRecipesBackup();
 
     void uploadRecipesBackup(MultipartFile file);
+
+    Path exportAsTXT();
 }
