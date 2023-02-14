@@ -127,8 +127,8 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public Path exportAsTXT() {
         Path path = Path.of(templatePath);
-        try (Writer writer = Files.newBufferedWriter(path)){
-            for(Recipe recipe : recipeStorage.values()){
+        try (Writer writer = Files.newBufferedWriter(path)) {
+            for (Recipe recipe : recipeStorage.values()) {
                 writer.append(recipe.formatted());
             }
         } catch (IOException e) {
