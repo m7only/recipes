@@ -3,12 +3,15 @@ package com.m7.recipes.services.impl;
 import com.m7.recipes.entity.Ingredient;
 import com.m7.recipes.entity.Recipe;
 import com.m7.recipes.services.BackupService;
+import com.m7.recipes.services.IngredientService;
 import com.m7.recipes.services.RecipeService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -17,23 +20,28 @@ import java.util.stream.Collectors;
 public class RecipeServiceImpl implements RecipeService {
     private static Integer counter = 0;
     private final BackupService backupService;
+    private final IngredientService ingredientService;
     private Map<Integer, Recipe> recipeStorage = new HashMap<>();
     @Value("${recipe.backup.file.name}")
     private String fileName;
 
-    public RecipeServiceImpl(BackupService backupService) {
+    public RecipeServiceImpl(BackupService backupService, IngredientService ingredientService) {
         this.backupService = backupService;
+        this.ingredientService = ingredientService;
     }
 
     @PostConstruct
     private void backupLoad() {
-        recipeStorage = backupService.loadBackup(recipeStorage, fileName).orElse(recipeStorage);
+        recipeStorage = backupService
+                .loadBackup(Integer.class, Recipe.class, fileName)
+                .orElse(recipeStorage);
     }
 
     @Override
     public Recipe addRecipe(Recipe recipe) {
         recipeStorage.put(counter++, recipe);
-        backupService.saveBackup(recipeStorage, fileName);
+        saveRecipesBackup();
+        ingredientService.addIngredient(recipe.getIngredients());
         return recipe;
     }
 
@@ -81,7 +89,8 @@ public class RecipeServiceImpl implements RecipeService {
             throw new IllegalArgumentException();
         }
         recipeStorage.put(id, recipe);
-        backupService.saveBackup(recipeStorage, fileName);
+        saveRecipesBackup();
+        ingredientService.addIngredient(recipe.getIngredients());
         return Optional.ofNullable(recipe);
     }
 
@@ -91,7 +100,21 @@ public class RecipeServiceImpl implements RecipeService {
             throw new IllegalArgumentException();
         }
         Recipe recipe = recipeStorage.remove(id);
-        backupService.saveBackup(recipeStorage, fileName);
+        saveRecipesBackup();
+        ingredientService.addIngredient(recipe.getIngredients());
         return Optional.ofNullable(recipe);
+    }
+
+    @Override
+    public Path saveRecipesBackup() {
+        return backupService.saveBackup(recipeStorage, fileName);
+    }
+
+    @Override
+    public void uploadRecipesBackup(MultipartFile file) {
+        recipeStorage = backupService.uploadBackupFile(Integer.class, Recipe.class, file, fileName).orElse(recipeStorage);
+        recipeStorage.values().stream()
+                .toList()
+                .forEach(recipe -> ingredientService.addIngredient(recipe.getIngredients()));
     }
 }
