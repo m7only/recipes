@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,6 +27,9 @@ public class RecipeServiceImpl implements RecipeService {
     private Map<Integer, Recipe> recipeStorage = new HashMap<>();
     @Value("${recipe.backup.file.name}")
     private String fileName;
+
+    @Value("${recipe.template.path}")
+    private String templatePath;
 
     public RecipeServiceImpl(BackupService backupService, IngredientService ingredientService) {
         this.backupService = backupService;
@@ -116,5 +122,18 @@ public class RecipeServiceImpl implements RecipeService {
         recipeStorage.values().stream()
                 .toList()
                 .forEach(recipe -> ingredientService.addIngredient(recipe.getIngredients()));
+    }
+
+    @Override
+    public Path exportAsTXT() {
+        Path path = Path.of(templatePath);
+        try (Writer writer = Files.newBufferedWriter(path)){
+            for(Recipe recipe : recipeStorage.values()){
+                writer.append(recipe.formatted());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return path;
     }
 }
