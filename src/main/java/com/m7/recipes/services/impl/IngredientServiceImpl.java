@@ -42,7 +42,9 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public void addIngredient(List<Ingredient> ingredients) {
-        Set.copyOf(ingredients).forEach(this::addIngredient);
+        Set<Ingredient> set = new HashSet<>(Set.copyOf(ingredients));
+        set.removeAll(ingredientStorage.values());
+        set.forEach(this::addIngredient);
     }
 
     @Override
